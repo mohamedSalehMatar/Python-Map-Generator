@@ -33,13 +33,16 @@ while running:
     pygame.draw.rect(screen, "white", pygame.Rect(0, 0, 280, 720))
     pygame.draw.rect(screen, "black", pygame.Rect(0, 0, 280, 720), width=5)
 
-    # Map tiles
+    # Render map tiles based on map array
     for x in range(0, 1000, 10):
         for y in range(0, 720, 10):
+            if (arr[y//10][x//10] == 0):
+                pygame.draw.rect(screen, "blue", pygame.Rect(0+280+x, 0+y, 10, 10))
+                pygame.draw.rect(screen, "black", pygame.Rect(0+280+x, 0+y, 10, 10), width=1)
+            else:
+                pygame.draw.rect(screen, "green", pygame.Rect(0+280+x, 0+y, 10, 10))
+                pygame.draw.rect(screen, "black", pygame.Rect(0+280+x, 0+y, 10, 10), width=1)
             
-            pygame.draw.rect(screen, "white", pygame.Rect(0+280+x, 0+y, 10, 10))
-            pygame.draw.rect(screen, "black", pygame.Rect(0+280+x, 0+y, 10, 10), width=1)
-
     # flip() the display to put your work on screen
     pygame.display.flip()
 
