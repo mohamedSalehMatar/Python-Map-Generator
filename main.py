@@ -17,7 +17,9 @@ while running:
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
 
-    # RENDER YOUR GAME HERE
+    # Side menu
+    pygame.draw.rect(screen, "white", pygame.Rect(0, 0, 200, 720))
+    pygame.draw.rect(screen, "black", pygame.Rect(0, 0, 200, 720), width=5)
 
     # flip() the display to put your work on screen
     pygame.display.flip()
