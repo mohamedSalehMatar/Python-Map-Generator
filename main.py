@@ -1,5 +1,9 @@
-# Example file showing a basic pygame "game loop"
+# Imports
 import pygame
+import time
+
+time.sleep(2.5)
+
 
 # pygame setup
 pygame.init()
@@ -18,8 +22,17 @@ while running:
     screen.fill("purple")
 
     # Side menu
-    pygame.draw.rect(screen, "white", pygame.Rect(0, 0, 200, 720))
-    pygame.draw.rect(screen, "black", pygame.Rect(0, 0, 200, 720), width=5)
+    pygame.draw.rect(screen, "white", pygame.Rect(0, 0, 280, 720))
+    pygame.draw.rect(screen, "black", pygame.Rect(0, 0, 280, 720), width=5)
+
+    # Map tiles
+    for x in range(0, 1000, 10):
+        for y in range(0, 720, 10):
+            #time.sleep(0.001)
+            pygame.display.flip()
+            
+            pygame.draw.rect(screen, "white", pygame.Rect(0+280+x, 0+y, 10, 10))
+            pygame.draw.rect(screen, "black", pygame.Rect(0+280+x, 0+y, 10, 10), width=1)
 
     # flip() the display to put your work on screen
     pygame.display.flip()
