@@ -1,9 +1,17 @@
 # Imports
 import pygame
 import time
+import random
 
-time.sleep(2.5)
-
+# Map array
+arr = []
+rows, cols = 72, 100
+for _ in range(rows):
+    row = []
+    for _ in range(cols):
+        row.append(random.randrange(0, 2))
+    arr.append(row)
+print(arr) 
 
 # pygame setup
 pygame.init()
@@ -28,8 +36,6 @@ while running:
     # Map tiles
     for x in range(0, 1000, 10):
         for y in range(0, 720, 10):
-            #time.sleep(0.001)
-            pygame.display.flip()
             
             pygame.draw.rect(screen, "white", pygame.Rect(0+280+x, 0+y, 10, 10))
             pygame.draw.rect(screen, "black", pygame.Rect(0+280+x, 0+y, 10, 10), width=1)
@@ -37,6 +43,6 @@ while running:
     # flip() the display to put your work on screen
     pygame.display.flip()
 
-    clock.tick(60)  # limits FPS to 60
+    clock.tick(120)  # limits FPS to 60
 
 pygame.quit()
