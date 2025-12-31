@@ -63,7 +63,7 @@ clock = pygame.time.Clock()
 running = True
 
 # Intializing Buttons
-random_gen_button = Button(screen, 200, 50, 100, 50, 50, 100, 50)
+random_gen_button = Button(screen, 0, 0, 0, side_menu_width//2, side_menu_height//5, 200, 100)
 
 while running:
     # poll for events
@@ -72,7 +72,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-                #checks if a mouse is clicked
+        #checks if a mouse is clicked
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos() 
             if random_gen_button.is_hovered(mouse_x, mouse_y):
