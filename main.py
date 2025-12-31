@@ -2,6 +2,7 @@
 import pygame
 import time
 import random
+import sys
 
 # Global variables
 screen_height = 720
@@ -18,7 +19,6 @@ map_width = 1000
 water = 0 
 land = 1
 hills = 2
-
 
 # Map array
 arr = []
@@ -43,12 +43,19 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+                #checks if a mouse is clicked
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mousePos = pygame.mouse.get_pos()
+            print(mousePos)
+
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("purple")
 
     # Side menu
     pygame.draw.rect(screen, "white", pygame.Rect(0, 0, side_menu_width, side_menu_height))
     pygame.draw.rect(screen, "black", pygame.Rect(0, 0, side_menu_width, side_menu_height), width=5)
+
+    pygame
 
     # Render map tiles based on map array
     for x in range(0, map_width, tile_size):
