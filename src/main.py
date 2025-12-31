@@ -4,6 +4,8 @@ import time
 import random
 import sys
 
+from buttons import Button
+
 # Global variables
 screen_height = 720
 screen_width = 1280
@@ -60,6 +62,9 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 clock = pygame.time.Clock()
 running = True
 
+# Intializing Buttons
+random_gen_button = Button(screen, 200, 50, 100, 50, 50, 100, 50)
+
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -73,6 +78,7 @@ while running:
             
     side_menu_render()
     map_render()
+    random_gen_button.render_button()
             
     # flip() the display to put your work on screen
     pygame.display.flip()
