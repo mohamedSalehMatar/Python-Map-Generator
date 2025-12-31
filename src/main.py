@@ -74,7 +74,11 @@ while running:
 
                 #checks if a mouse is clicked
         if event.type == pygame.MOUSEBUTTONDOWN:
-            random_map_generator(map_arr)
+            mouse_x, mouse_y = pygame.mouse.get_pos() 
+            if random_gen_button.is_hovered(mouse_x, mouse_y):
+                random_map_generator(map_arr)
+            else:
+                continue
             
     side_menu_render()
     map_render()
