@@ -3,19 +3,36 @@ import pygame
 import time
 import random
 
+# Global variables
+screen_height = 720
+screen_width = 1280
+side_menu_height = 720
+side_menu_width = 280
+tile_size = 10
+map_offset_x = side_menu_width
+map_offset_y = 0
+map_height = 720
+map_width = 1000
+
+# Tile variables
+water = 0 
+land = 1
+hills = 2
+
+
 # Map array
 arr = []
-rows, cols = 72, 100
+rows, cols = map_height//tile_size, map_width//tile_size
 for _ in range(rows):
     row = []
     for _ in range(cols):
-        row.append(random.randrange(0, 2))
+        row.append(random.randrange(water, hills))
     arr.append(row)
 print(arr) 
 
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((1280, 720))
+screen = pygame.display.set_mode((screen_width, screen_height))
 clock = pygame.time.Clock()
 running = True
 
@@ -30,18 +47,20 @@ while running:
     screen.fill("purple")
 
     # Side menu
-    pygame.draw.rect(screen, "white", pygame.Rect(0, 0, 280, 720))
-    pygame.draw.rect(screen, "black", pygame.Rect(0, 0, 280, 720), width=5)
+    pygame.draw.rect(screen, "white", pygame.Rect(0, 0, side_menu_width, side_menu_height))
+    pygame.draw.rect(screen, "black", pygame.Rect(0, 0, side_menu_width, side_menu_height), width=5)
 
     # Render map tiles based on map array
-    for x in range(0, 1000, 10):
-        for y in range(0, 720, 10):
-            if (arr[y//10][x//10] == 0):
-                pygame.draw.rect(screen, "blue", pygame.Rect(0+280+x, 0+y, 10, 10))
-                pygame.draw.rect(screen, "black", pygame.Rect(0+280+x, 0+y, 10, 10), width=1)
+    for x in range(0, map_width, tile_size):
+        for y in range(0, map_height, tile_size):
+            if (arr[y//tile_size][x//tile_size] == water):
+                # If array index = 0 then draw a water tile
+                pygame.draw.rect(screen, "blue", pygame.Rect(0+map_offset_x+x, map_offset_y+y, tile_size, tile_size))
+                pygame.draw.rect(screen, "black", pygame.Rect(0+map_offset_x+x, map_offset_y+y, tile_size, tile_size), width=1)   
             else:
-                pygame.draw.rect(screen, "green", pygame.Rect(0+280+x, 0+y, 10, 10))
-                pygame.draw.rect(screen, "black", pygame.Rect(0+280+x, 0+y, 10, 10), width=1)
+                # If array index = 1 then draw a land tile tile
+                pygame.draw.rect(screen, "green", pygame.Rect(0+map_offset_x+x, map_offset_y+y, tile_size, tile_size))
+                pygame.draw.rect(screen, "black", pygame.Rect(0+map_offset_x+x, map_offset_y+y, tile_size, tile_size), width=1)
             
     # flip() the display to put your work on screen
     pygame.display.flip()
