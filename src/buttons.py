@@ -19,7 +19,6 @@ class Button:
         
     def is_hovered(self, mouse_x, mouse_y):
         x, y = self.rect.center
-        print(x, y)
         if  x - (self.rect.width//2) <= mouse_x <= x + (self.rect.width//2) and y - (self.rect.height//2) <= mouse_y <= y + (self.rect.height//2):
             return True 
             
