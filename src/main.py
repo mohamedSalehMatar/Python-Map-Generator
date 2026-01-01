@@ -58,31 +58,41 @@ def map_render():
 
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((screen_width, screen_height))
+# Use DOUBLEBUF + HWSURFACE to reduce flicker when switching fullscreen
+screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN | pygame.SCALED)
+pygame.display.set_caption("Python Map Generator")
 clock = pygame.time.Clock()
 running = True
 
 # Intializing Buttons
 random_gen_button = Button(screen, 0, 0, 0, side_menu_width//2, side_menu_height//5, 200, 100)
+exit_button = Button(screen, 255, 0, 0, side_menu_width//2, side_menu_height//2, 200, 100)
+
 
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-
-        #checks if a mouse is clicked
+        #checks if a generate button is clicked
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = pygame.mouse.get_pos() 
             if random_gen_button.is_hovered(mouse_x, mouse_y):
                 random_map_generator(map_arr)
-            else:
-                continue
-            
+                
+        #checks if a quit button is clicked
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_x, mouse_y = pygame.mouse.get_pos() 
+            if exit_button.is_hovered(mouse_x, mouse_y):
+                running = False
+                
+        if event.type == pygame.QUIT:
+            running = False
+                
+                
     side_menu_render()
     map_render()
     random_gen_button.render_button()
+    exit_button.render_button()
             
     # flip() the display to put your work on screen
     pygame.display.flip()
