@@ -65,8 +65,8 @@ clock = pygame.time.Clock()
 running = True
 
 # Intializing Buttons
-random_gen_button = Button(screen, 0, 0, 0, side_menu_width//2, side_menu_height//5, 200, 100)
-exit_button = Button(screen, 255, 0, 0, side_menu_width//2, side_menu_height//2, 200, 100)
+random_gen_button = Button(screen, 0, 0, 0, pygame.Rect(side_menu_width//2, side_menu_height//5, 200, 100))
+exit_button = Button(screen, 255, 0, 0, pygame.Rect(side_menu_width//2, side_menu_height//2, 200, 100))
 
 
 while running:
