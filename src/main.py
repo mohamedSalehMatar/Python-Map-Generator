@@ -3,8 +3,13 @@ import pygame
 import time
 import random
 import sys
+import os
+from pathlib import Path
 
 from buttons import Button
+
+script_dir = Path(sys.argv[0]).resolve().parent.parent
+os.chdir(script_dir)
 
 # Global variables
 screen_height = 720
@@ -61,7 +66,7 @@ def render_map():
 def render_side_menu():
     pygame.draw.rect(screen, "white", pygame.Rect(0, 0, side_menu_width, side_menu_height))
     pygame.draw.rect(screen, "black", pygame.Rect(0, 0, side_menu_width, side_menu_height), width=5)
-    
+
 # pygame setup
 pygame.init()
 # Use DOUBLEBUF + HWSURFACE to reduce flicker when switching fullscreen
@@ -71,10 +76,15 @@ clock = pygame.time.Clock()
 running = True
 
 # Intializing Buttons
-random_gen_button = Button(screen, 0, 0, 0, pygame.Rect(side_menu_width//2, 150, 200, 75))
-reset_button = Button(screen, 150, 150, 150, pygame.Rect(side_menu_width//2, 250, 200, 75))
-exit_button = Button(screen, 255, 0, 0, pygame.Rect(side_menu_width//2, 350, 200, 75))
+new_map_button = Button("assets/sprites/new_map_button.png", (side_menu_width//2, 150))
+reset_map_button = Button("assets/sprites/reset_map_button.png", (side_menu_width//2, 250))
+exit_button = Button("assets/sprites/exit_button.png", (side_menu_width//2, 350))
 
+buttons = pygame.sprite.Group(
+    new_map_button,
+    reset_map_button,
+    exit_button
+)
 
 while running:
     # poll for events
@@ -82,20 +92,17 @@ while running:
     for event in pygame.event.get():
         #Checks if a generate button is clicked
         if event.type == pygame.MOUSEBUTTONDOWN:
-            mouse_x, mouse_y = pygame.mouse.get_pos() 
-            if random_gen_button.is_hovered(mouse_x, mouse_y):
+            if new_map_button.rect.collidepoint(event.pos):
                 generate_random_map(map_arr)
-        
+
         #Checks if a reset button is clicked        
         if event.type == pygame.MOUSEBUTTONDOWN:
-            mouse_x, mouse_y = pygame.mouse.get_pos() 
-            if reset_button.is_hovered(mouse_x, mouse_y):
+            if reset_map_button.rect.collidepoint(event.pos):
                 reset_map(map_arr)
                 
         #Checks if a quit button is clicked
         if event.type == pygame.MOUSEBUTTONDOWN:
-            mouse_x, mouse_y = pygame.mouse.get_pos() 
-            if exit_button.is_hovered(mouse_x, mouse_y):
+            if exit_button.rect.collidepoint(event.pos):
                 running = False
                 
         if event.type == pygame.QUIT:
@@ -103,12 +110,9 @@ while running:
                 
                 
     render_side_menu()
-    #print('Map reset before render', map_arr)
     render_map()
-    #print('Map reset after render', map_arr)
-    random_gen_button.render_button()
-    reset_button.render_button()
-    exit_button.render_button()
+    
+    buttons.draw(screen)
             
     # flip() the display to put your work on screen
     pygame.display.flip()
