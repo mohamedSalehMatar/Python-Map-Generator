@@ -66,6 +66,38 @@ def render_map():
 def render_side_menu():
     pygame.draw.rect(screen, "white", pygame.Rect(0, 0, side_menu_width, side_menu_height))
     pygame.draw.rect(screen, "black", pygame.Rect(0, 0, side_menu_width, side_menu_height), width=5)
+    
+# Save map to a text file
+def save_map(map_arr):
+    # Ensure save directory exists
+    Path('saves').mkdir(parents=True, exist_ok=True)
+    rows, cols = map_height // tile_size, map_width // tile_size
+    with open('saves/map.txt', 'w') as file:
+        # write each row as comma-separated integers
+        for row in map_arr[:rows]:
+            file.write(','.join(map(str, row[:cols])) + '\n')
+
+# Load a map from a save text file
+def load_map():
+    path = Path('saves/map.txt')
+    if not path.exists():
+        print("No saved map found at", path)
+        return
+    with open(path, 'r') as file:
+        lines = [line.strip() for line in file if line.strip() != '']
+
+    rows, cols = map_height // tile_size, map_width // tile_size
+    map_arr.clear()
+    for i in range(rows):
+        if i < len(lines):
+            parts = lines[i].split(',')
+            row = []
+            for j in range(cols):
+                row.append(int(parts[j]))
+                
+        map_arr.append(row)
+
+
 
 # pygame setup
 pygame.init()
@@ -78,11 +110,15 @@ running = True
 # Intializing Buttons
 new_map_button = Button("assets/sprites/new_map_button.png", (side_menu_width//2, 150))
 reset_map_button = Button("assets/sprites/reset_map_button.png", (side_menu_width//2, 250))
-exit_button = Button("assets/sprites/exit_button.png", (side_menu_width//2, 350))
+save_button = Button("assets/sprites/save_button.png", (side_menu_width//2, 350))
+load_button = Button("assets/sprites/load_button.png", (side_menu_width//2, 450))
+exit_button = Button("assets/sprites/exit_button.png", (side_menu_width//2, 550))
 
 buttons = pygame.sprite.Group(
     new_map_button,
     reset_map_button,
+    save_button,
+    load_button,
     exit_button
 )
 
@@ -99,6 +135,15 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if reset_map_button.rect.collidepoint(event.pos):
                 reset_map(map_arr)
+                
+        #Checks if a save button is clicked        
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if save_button.rect.collidepoint(event.pos):
+                save_map(map_arr)
+                
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if load_button.rect.collidepoint(event.pos):
+                load_map()
                 
         #Checks if a quit button is clicked
         if event.type == pygame.MOUSEBUTTONDOWN:

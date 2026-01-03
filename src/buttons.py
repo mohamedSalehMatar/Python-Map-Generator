@@ -8,8 +8,4 @@ class Button(pygame.sprite.Sprite):
 
     def is_hovered(self, mouse_pos):
         return self.rect.collidepoint(mouse_pos)
-
-            
-
-            
-        
+    
