@@ -29,6 +29,26 @@ hills = 2
 
 # Map init
 map_arr = [[0] * (map_width // tile_size) for _ in range(map_height // tile_size)]
+
+def edit_tile(x, y):
+    # Round map coords to first tile coords
+    x_string = str(x)
+    y_string = str(y)
+    x_string_rounded = x_string[:-1] + '0'
+    y_string_rounded = y_string[:-1] + '0'
+    x_rounded = int(x_string_rounded) - side_menu_width
+    y_rounded = int(y_string_rounded)
+    print(x_rounded, y_rounded)
+
+    # Get tile index in map array
+    x_map_arr = x_rounded//tile_size
+    y_map_arr = y_rounded//tile_size
+    print(x_map_arr, y_map_arr)
+
+    if map_arr[y_map_arr][x_map_arr] == 0:
+        map_arr[y_map_arr][x_map_arr] = 1
+    else:
+        map_arr[y_map_arr][x_map_arr] = 0
     
 # Generate a map with randomized tiles
 def generate_random_map(map_arr):
@@ -126,6 +146,13 @@ while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
+
+        #Checks if a user is clicking on the map
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_x, mouse_y = event.pos
+            if side_menu_width < mouse_x < screen_width  and 0 < mouse_y < screen_height:
+                edit_tile(mouse_x, mouse_y)
+
         #Checks if a generate button is clicked
         if event.type == pygame.MOUSEBUTTONDOWN:
             if new_map_button.rect.collidepoint(event.pos):
