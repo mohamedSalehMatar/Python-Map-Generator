@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 
 from buttons import Button
-from menus import Menus
+from menus import Menu
 
 script_dir = Path(sys.argv[0]).resolve().parent.parent
 os.chdir(script_dir)
@@ -128,6 +128,9 @@ pygame.display.set_caption("Python Map Generator")
 clock = pygame.time.Clock()
 running = True
 
+# Intializing Menus
+side_menu = Menu("assets/sprites/menus/side_menu.png", (0,0), 0)
+
 # Intializing Buttons
 new_map_button = Button("assets/sprites/buttons/new_map_button.png", (side_menu_width//2, 150))
 reset_map_button = Button("assets/sprites/buttons/reset_map_button.png", (side_menu_width//2, 250))
@@ -135,7 +138,8 @@ save_button = Button("assets/sprites/buttons/save_button.png", (side_menu_width/
 load_button = Button("assets/sprites/buttons/load_button.png", (side_menu_width//2, 450))
 exit_button = Button("assets/sprites/buttons/exit_button.png", (side_menu_width//2, 550))
 
-buttons = pygame.sprite.Group(
+gui = pygame.sprite.Group(
+    side_menu,
     new_map_button,
     reset_map_button,
     save_button,
@@ -154,40 +158,49 @@ while running:
             if side_menu_width < mouse_x < screen_width  and 0 < mouse_y < screen_height:
                 edit_tile(mouse_x, mouse_y)
 
-        #Checks if a generate button is clicked
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if new_map_button.rect.collidepoint(event.pos):
-                generate_random_map(map_arr)
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_m:
+                if not side_menu.is_on:
+                    side_menu.toggle()
 
-        #Checks if a reset button is clicked        
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if reset_map_button.rect.collidepoint(event.pos):
-                reset_map(map_arr)
-                
-        #Checks if a save button is clicked        
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if save_button.rect.collidepoint(event.pos):
-                save_map(map_arr)
-                
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if load_button.rect.collidepoint(event.pos):
-                load_map()
-                
-        #Checks if a quit button is clicked
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if exit_button.rect.collidepoint(event.pos):
-                running = False
+                elif side_menu.is_on:
+                    side_menu.toggle()
+
+        if side_menu.is_on:
+            #Checks if generate button is clicked
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if new_map_button.rect.collidepoint(event.pos):
+                    generate_random_map(map_arr)
+
+            #Checks if reset button is clicked        
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if reset_map_button.rect.collidepoint(event.pos):
+                    reset_map(map_arr)
+        
+                #Checks if save button is clicked        
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if save_button.rect.collidepoint(event.pos):
+                    save_map(map_arr)
+
+            #Check if load button is clicked
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if load_button.rect.collidepoint(event.pos):
+                    load_map()
+        
+            #Checks if quit button is clicked
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if exit_button.rect.collidepoint(event.pos):
+                        running = False
                 
         if event.type == pygame.QUIT:
             running = False
-                
-                
-    render_side_menu()
+
+    # render_side_menu()
+    screen.fill((0, 0, 0))
     render_map()
     
-    buttons.draw(screen)
-            
-    # flip() the display to put your work on screen
+    if side_menu.is_on:
+        gui.draw(screen)
     pygame.display.flip()
 
     clock.tick(60)  # limits FPS to 60
