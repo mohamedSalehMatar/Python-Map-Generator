@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 
 from buttons import Button
+from menus import Menus
 
 script_dir = Path(sys.argv[0]).resolve().parent.parent
 os.chdir(script_dir)
@@ -128,11 +129,11 @@ clock = pygame.time.Clock()
 running = True
 
 # Intializing Buttons
-new_map_button = Button("assets/sprites/new_map_button.png", (side_menu_width//2, 150))
-reset_map_button = Button("assets/sprites/reset_map_button.png", (side_menu_width//2, 250))
-save_button = Button("assets/sprites/save_button.png", (side_menu_width//2, 350))
-load_button = Button("assets/sprites/load_button.png", (side_menu_width//2, 450))
-exit_button = Button("assets/sprites/exit_button.png", (side_menu_width//2, 550))
+new_map_button = Button("assets/sprites/buttons/new_map_button.png", (side_menu_width//2, 150))
+reset_map_button = Button("assets/sprites/buttons/reset_map_button.png", (side_menu_width//2, 250))
+save_button = Button("assets/sprites/buttons/save_button.png", (side_menu_width//2, 350))
+load_button = Button("assets/sprites/buttons/load_button.png", (side_menu_width//2, 450))
+exit_button = Button("assets/sprites/buttons/exit_button.png", (side_menu_width//2, 550))
 
 buttons = pygame.sprite.Group(
     new_map_button,
@@ -189,6 +190,6 @@ while running:
     # flip() the display to put your work on screen
     pygame.display.flip()
 
-    clock.tick(120)  # limits FPS to 60
+    clock.tick(60)  # limits FPS to 60
 
 pygame.quit()
