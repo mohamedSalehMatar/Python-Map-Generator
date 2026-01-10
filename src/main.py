@@ -13,15 +13,15 @@ script_dir = Path(sys.argv[0]).resolve().parent.parent
 os.chdir(script_dir)
 
 # Global variables
-screen_height = 720
-screen_width = 1280
-side_menu_height = 720
+
+screen_width = 1000  
+screen_height = 800 
+
 side_menu_width = 280
+
 tile_size = 10
-map_offset_x = side_menu_width
-map_offset_y = 0
-map_height = 720
-map_width = 1000
+map_width = 1000  
+map_height = 800  
 
 # Tile variables
 water = 0 
@@ -31,6 +31,7 @@ hills = 2
 # Map init
 map_arr = [[0] * (map_width // tile_size) for _ in range(map_height // tile_size)]
 
+# Edit tiles types in the map
 def edit_tile(x, y):
     # Round map coords to first tile coords
     x_string = str(x)
@@ -76,17 +77,12 @@ def render_map():
         for y in range(0, map_height, tile_size):
             if (map_arr[y//tile_size][x//tile_size] == water):
                 # If array index = 0 then draw a water tile
-                pygame.draw.rect(screen, "blue", pygame.Rect(0+map_offset_x+x, map_offset_y+y, tile_size, tile_size))
-                pygame.draw.rect(screen, "black", pygame.Rect(0+map_offset_x+x, map_offset_y+y, tile_size, tile_size), width=1)   
+                pygame.draw.rect(screen, "blue", pygame.Rect(x, y, tile_size, tile_size))
+                pygame.draw.rect(screen, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)   
             else:
                 # If array index = 1 then draw a land tile tile
-                pygame.draw.rect(screen, "green", pygame.Rect(0+map_offset_x+x, map_offset_y+y, tile_size, tile_size))
-                pygame.draw.rect(screen, "black", pygame.Rect(0+map_offset_x+x, map_offset_y+y, tile_size, tile_size), width=1)
-                
-# Draw side menu
-def render_side_menu():
-    pygame.draw.rect(screen, "white", pygame.Rect(0, 0, side_menu_width, side_menu_height))
-    pygame.draw.rect(screen, "black", pygame.Rect(0, 0, side_menu_width, side_menu_height), width=5)
+                pygame.draw.rect(screen, "green", pygame.Rect(x, y, tile_size, tile_size))
+                pygame.draw.rect(screen, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)
     
 # Save map to a text file
 def save_map(map_arr):
