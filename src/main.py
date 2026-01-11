@@ -33,18 +33,11 @@ map_arr = [[0] * (map_width // tile_size) for _ in range(map_height // tile_size
 
 # Edit tiles types in the map
 def edit_tile(x, y):
-    # Round map coords to first tile coords
-    x_string = str(x)
-    y_string = str(y)
-    x_string_rounded = x_string[:-1] + '0'
-    y_string_rounded = y_string[:-1] + '0'
-    x_rounded = int(x_string_rounded) - side_menu_width
-    y_rounded = int(y_string_rounded)
-    print(x_rounded, y_rounded)
 
-    # Get tile index in map array
-    x_map_arr = x_rounded//tile_size
-    y_map_arr = y_rounded//tile_size
+    print(x, y)
+    # Round map coords to first tile coords
+    x_map_arr = x // tile_size
+    y_map_arr = y // tile_size
     print(x_map_arr, y_map_arr)
 
     if map_arr[y_map_arr][x_map_arr] == 0:
@@ -114,12 +107,9 @@ def load_map():
                 
         map_arr.append(row)
 
-
-
 # pygame setup
 pygame.init()
-# Use DOUBLEBUF + HWSURFACE to reduce flicker when switching fullscreen
-screen = pygame.display.set_mode((screen_width, screen_height),) #pygame.FULLSCREEN | pygame.SCALED)
+screen = pygame.display.set_mode((screen_width, screen_height)) #, pygame.FULLSCREEN | pygame.SCALED)
 pygame.display.set_caption("Python Map Generator")
 clock = pygame.time.Clock()
 running = True
@@ -151,7 +141,7 @@ while running:
         #Checks if a user is clicking on the map
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_x, mouse_y = event.pos
-            if side_menu_width < mouse_x < screen_width  and 0 < mouse_y < screen_height:
+            if 0 < mouse_x < screen_width  and 0 < mouse_y < screen_height:
                 edit_tile(mouse_x, mouse_y)
 
         if event.type == pygame.KEYDOWN:
