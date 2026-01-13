@@ -20,8 +20,8 @@ screen_height = 800
 side_menu_width = 280
 
 tile_size = 10
-map_width = 1500  
-map_height = 800  
+map_width = screen_width - 0
+map_height = screen_height - 0
 
 # Tile variables
 water = 0 
@@ -34,16 +34,29 @@ map_arr = [[0] * (map_width // tile_size) for _ in range(map_height // tile_size
 # Edit tiles types in the map
 def edit_tile(x, y):
 
-    print(x, y)
-    # Round map coords to first tile coords
-    x_map_arr = x // tile_size
-    y_map_arr = y // tile_size
-    print(x_map_arr, y_map_arr)
+    x_origin, y_origin = map_menu.rect.topleft
+    print(x_origin, y_origin) 
 
-    if map_arr[y_map_arr][x_map_arr] == 0:
-        map_arr[y_map_arr][x_map_arr] = 1
-    else:
-        map_arr[y_map_arr][x_map_arr] = 0
+    x_offset = map_menu.image.get_width()
+    y_offset = map_menu.image.get_height()
+    print(x_offset, y_offset)
+
+    if x_origin <= x <= x_origin + x_offset and y_origin <= y <= y_origin + y_offset:
+        print(x, y)
+        x = x - x_origin
+        y = y - y_origin
+        print(x, y)
+
+        # Round map coords to first tile coords
+        x_map_arr = x // tile_size
+        y_map_arr = y // tile_size
+        print(x_map_arr, y_map_arr)
+        print('=============') 
+
+        if map_arr[y_map_arr][x_map_arr] == 0:
+            map_arr[y_map_arr][x_map_arr] = 1
+        else:
+            map_arr[y_map_arr][x_map_arr] = 0
     
 # Generate a map with randomized tiles
 def generate_random_map(map_arr):
@@ -70,12 +83,12 @@ def render_map():
         for y in range(0, map_height, tile_size):
             if (map_arr[y//tile_size][x//tile_size] == water):
                 # If array index = 0 then draw a water tile
-                pygame.draw.rect(screen, "blue", pygame.Rect(x, y, tile_size, tile_size))
-                pygame.draw.rect(screen, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)   
+                pygame.draw.rect(map_menu.image, "blue", pygame.Rect(x, y, tile_size, tile_size))
+                pygame.draw.rect(map_menu.image, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)   
             else:
                 # If array index = 1 then draw a land tile tile
-                pygame.draw.rect(screen, "green", pygame.Rect(x, y, tile_size, tile_size))
-                pygame.draw.rect(screen, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)
+                pygame.draw.rect(map_menu.image, "green", pygame.Rect(x, y, tile_size, tile_size))
+                pygame.draw.rect(map_menu.image, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)
     
 # Save map to a text file
 def save_map(map_arr):
@@ -115,10 +128,10 @@ clock = pygame.time.Clock()
 running = True
 
 # Intializing Map
-map_menu = Menu((screen_width//2, screen_height//2), 0, '', 400, 400, 'center')
+map_menu = Menu((screen_width//2, screen_height//2), 1, '', map_width, map_height, 'center', 255, 0, 0)
 
 # Intializing Menus
-side_menu = Menu((0,0), 0, "assets/sprites/menus/side_menu.png", side_menu_width, 700, 255, 255, 255)
+side_menu = Menu((0,0), 0, "assets/sprites/menus/side_menu.png", side_menu_width, 700, 0, 0, 0)
 
 # Intializing Buttons
 new_map_button = Button("assets/sprites/buttons/new_map_button.png", (side_menu_width//2, 150))
@@ -127,15 +140,17 @@ save_button = Button("assets/sprites/buttons/save_button.png", (side_menu_width/
 load_button = Button("assets/sprites/buttons/load_button.png", (side_menu_width//2, 450))
 exit_button = Button("assets/sprites/buttons/exit_button.png", (side_menu_width//2, 550))
 
-gui = pygame.sprite.Group(
-    
+map_sprite_group = pygame.sprite.Group(
+    map_menu
+) 
+
+menus_sprite_group = pygame.sprite.Group(
     side_menu,
     new_map_button,
     reset_map_button,
     save_button,
     load_button,
-    exit_button,
-    map_menu,
+    exit_button
 )
 
 while running:
@@ -186,13 +201,13 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    # render_side_menu()
     screen.fill((0, 0, 0))
+    map_sprite_group.draw(screen)
     render_map()
     
     if side_menu.is_on:
-        # gui.remove(map_menu)
-        gui.draw(screen)
+        menus_sprite_group.draw(screen)
+
     pygame.display.flip()
 
     clock.tick(60)  # limits FPS to 60
