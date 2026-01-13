@@ -109,13 +109,13 @@ def load_map():
 
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((screen_width, screen_height))#, pygame.RESIZABLE, pygame.FULLSCREEN, pygame.SCALED)
+screen = pygame.display.set_mode((screen_width, screen_height), pygame.RESIZABLE, pygame.SCALED)
 pygame.display.set_caption("Python Map Generator")
 clock = pygame.time.Clock()
 running = True
 
 # Intializing Map
-map_menu = Menu((100, 100), 0, '', 400, 400)
+map_menu = Menu((screen_width//2, screen_height//2), 0, '', 400, 400, 'center')
 
 # Intializing Menus
 side_menu = Menu((0,0), 0, "assets/sprites/menus/side_menu.png", side_menu_width, 700, 255, 255, 255)
@@ -128,13 +128,14 @@ load_button = Button("assets/sprites/buttons/load_button.png", (side_menu_width/
 exit_button = Button("assets/sprites/buttons/exit_button.png", (side_menu_width//2, 550))
 
 gui = pygame.sprite.Group(
-    map_menu,
+    
     side_menu,
     new_map_button,
     reset_map_button,
     save_button,
     load_button,
-    exit_button
+    exit_button,
+    map_menu,
 )
 
 while running:
@@ -190,7 +191,7 @@ while running:
     render_map()
     
     if side_menu.is_on:
-        gui.remove(map_menu)
+        # gui.remove(map_menu)
         gui.draw(screen)
     pygame.display.flip()
 
