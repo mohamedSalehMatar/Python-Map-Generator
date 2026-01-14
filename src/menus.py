@@ -19,10 +19,8 @@ class Menu(pygame.sprite.Sprite):
     def toggle(self):
         if self.is_on == 0:
             self.is_on = 1
-            print("I am toggled on", self.is_on)
         else:
             self.is_on = 0 
-            print("I am toggled off", self.is_on)
         
         return self.is_on
     

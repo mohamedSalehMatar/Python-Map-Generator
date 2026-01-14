@@ -20,8 +20,8 @@ screen_height = 800
 side_menu_width = 280
 
 tile_size = 10
-map_width = screen_width - 0
-map_height = screen_height - 0
+map_width = screen_width - 300
+map_height = screen_height - 100
 
 # Tile variables
 water = 0 
@@ -35,23 +35,17 @@ map_arr = [[0] * (map_width // tile_size) for _ in range(map_height // tile_size
 def edit_tile(x, y):
 
     x_origin, y_origin = map_menu.rect.topleft
-    print(x_origin, y_origin) 
 
     x_offset = map_menu.image.get_width()
     y_offset = map_menu.image.get_height()
-    print(x_offset, y_offset)
 
     if x_origin <= x <= x_origin + x_offset and y_origin <= y <= y_origin + y_offset:
-        print(x, y)
         x = x - x_origin
         y = y - y_origin
-        print(x, y)
 
         # Round map coords to first tile coords
         x_map_arr = x // tile_size
         y_map_arr = y // tile_size
-        print(x_map_arr, y_map_arr)
-        print('=============') 
 
         if map_arr[y_map_arr][x_map_arr] == 0:
             map_arr[y_map_arr][x_map_arr] = 1
