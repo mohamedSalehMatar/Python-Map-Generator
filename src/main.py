@@ -4,6 +4,8 @@ import time
 import random
 import sys
 import os
+import noise
+import numpy as np
 from pathlib import Path
 
 from buttons import Button
@@ -27,6 +29,8 @@ map_height = screen_height - 100
 water = 0 
 land = 1
 hills = 2
+mounts = 3
+peaks = 4 
 
 # Map init
 map_arr = [[0] * (map_width // tile_size) for _ in range(map_height // tile_size)]
@@ -51,8 +55,14 @@ def edit_tile(x, y):
             map_arr[y_map_arr][x_map_arr] = 1
         else:
             map_arr[y_map_arr][x_map_arr] = 0
-    
-# Generate a map with randomized tiles
+
+# Generate a map with perlin noise
+def generate_perlin_map(map_arr):
+    print('hi')
+
+
+
+# Generate a map with white-noise
 def generate_random_map(map_arr):
     rows, cols = map_height // tile_size, map_width // tile_size
     # overwrite existing contents in-place
@@ -125,7 +135,7 @@ running = True
 map_menu = Menu((screen_width//2, screen_height//2), 1, '', map_width, map_height, 'center', 255, 0, 0)
 
 # Intializing Menus
-side_menu = Menu((0,0), 0, "assets/sprites/menus/side_menu.png", side_menu_width, 700, 0, 0, 0)
+side_menu = Menu((0,0), 1, "assets/sprites/menus/side_menu.png", side_menu_width, 700, 0, 0, 0)
 
 # Intializing Buttons
 new_map_button = Button("assets/sprites/buttons/new_map_button.png", (side_menu_width//2, 150))
@@ -170,7 +180,7 @@ while running:
             #Checks if generate button is clicked
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if new_map_button.rect.collidepoint(event.pos):
-                    generate_random_map(map_arr)
+                    generate_perlin_map(map_arr)
 
             #Checks if reset button is clicked        
             if event.type == pygame.MOUSEBUTTONDOWN:
