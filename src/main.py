@@ -4,8 +4,8 @@ import time
 import random
 import sys
 import os
-import noise
 import numpy as np
+from noise import pnoise2
 from pathlib import Path
 
 from buttons import Button
@@ -57,10 +57,32 @@ def edit_tile(x, y):
             map_arr[y_map_arr][x_map_arr] = 0
 
 # Generate a map with perlin noise
-def generate_perlin_map(map_arr):
-    print('hi')
+def generate_perlin_map(map_arr, min_out, max_out, scale=0.1, octaves=1, persistence=0.5, lacunarity=2.0, seed=0):
+    min_in = -1
+    max_in = 1
 
+    width = map_width
+    height = map_height
 
+    result = [[0.0 for _ in range(width)] for _ in range(height)]
+
+    for y in range(height):
+        for x in range(width):
+            noise_value = pnoise2(
+                x * scale,
+                y * scale,
+                octaves=octaves,
+                persistence=persistence,
+                lacunarity=lacunarity,
+                repeatx=width,
+                repeaty=height,
+                base=seed
+            )
+            noise_value_normalized = (noise_value - min_in) / (max_in - min_in) * (max_out - min_out) + min_out
+            result[y][x] = noise_value_normalized
+    
+    map_arr = result
+    return map_arr
 
 # Generate a map with white-noise
 def generate_random_map(map_arr):
@@ -70,7 +92,7 @@ def generate_random_map(map_arr):
     for _ in range(rows):
         row = []
         for _ in range(cols):
-            row.append(random.randrange(water, hills))
+            row.append(random.randrange(water, peaks))
         map_arr.append(row)
 
 # Reset map with water tiles
