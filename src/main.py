@@ -57,14 +57,15 @@ def edit_tile(x, y):
             map_arr[y_map_arr][x_map_arr] = 0
 
 # Generate a map with perlin noise
-def generate_perlin_map(map_arr, min_out, max_out, scale=0.1, octaves=1, persistence=0.5, lacunarity=2.0, seed=0):
+def generate_perlin_map(map_arr, min_out, max_out, min_seed=0, max_seed=100, scale=0.1, octaves=1, persistence=0.5, lacunarity=2.0):
+    print('generate perlin')
     min_in = -1
     max_in = 1
 
-    width = map_width
-    height = map_height
+    width = map_width // tile_size
+    height = map_height // tile_size
 
-    result = [[0.0 for _ in range(width)] for _ in range(height)]
+    seed = random.randrange(min_seed, max_seed)
 
     for y in range(height):
         for x in range(width):
@@ -79,9 +80,11 @@ def generate_perlin_map(map_arr, min_out, max_out, scale=0.1, octaves=1, persist
                 base=seed
             )
             noise_value_normalized = (noise_value - min_in) / (max_in - min_in) * (max_out - min_out) + min_out
-            result[y][x] = noise_value_normalized
-    
-    map_arr = result
+            print(int(round(noise_value_normalized, 0)))
+            map_arr[y][x] = (int(round(noise_value_normalized, 0)))
+
+    print(seed)
+    print('done generating')
     return map_arr
 
 # Generate a map with white-noise
@@ -107,14 +110,21 @@ def reset_map(map_arr):
 def render_map():
     for x in range(0, map_width, tile_size):
         for y in range(0, map_height, tile_size):
-            if (map_arr[y//tile_size][x//tile_size] == water):
-                # If array index = 0 then draw a water tile
-                pygame.draw.rect(map_menu.image, "blue", pygame.Rect(x, y, tile_size, tile_size))
-                pygame.draw.rect(map_menu.image, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)   
-            else:
-                # If array index = 1 then draw a land tile tile
-                pygame.draw.rect(map_menu.image, "green", pygame.Rect(x, y, tile_size, tile_size))
-                pygame.draw.rect(map_menu.image, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)
+            match map_arr[y//tile_size][x//tile_size]:
+                case 0:
+                    pygame.draw.rect(map_menu.image, "blue", pygame.Rect(x, y, tile_size, tile_size))
+                    pygame.draw.rect(map_menu.image, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)
+                case 1:
+                    pygame.draw.rect(map_menu.image, "green", pygame.Rect(x, y, tile_size, tile_size))
+                    pygame.draw.rect(map_menu.image, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)
+                case 2:
+                    pygame.draw.rect(map_menu.image, "brown", pygame.Rect(x, y, tile_size, tile_size))
+                    pygame.draw.rect(map_menu.image, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)
+                case 3:
+                    pygame.draw.rect(map_menu.image, "black", pygame.Rect(x, y, tile_size, tile_size))
+                    pygame.draw.rect(map_menu.image, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)
+                case _:
+                    pass
     
 # Save map to a text file
 def save_map(map_arr):
@@ -202,7 +212,7 @@ while running:
             #Checks if generate button is clicked
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if new_map_button.rect.collidepoint(event.pos):
-                    generate_perlin_map(map_arr)
+                    generate_perlin_map(map_arr, water, mounts, 0, 100)
 
             #Checks if reset button is clicked        
             if event.type == pygame.MOUSEBUTTONDOWN:
