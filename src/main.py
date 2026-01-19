@@ -15,13 +15,12 @@ script_dir = Path(sys.argv[0]).resolve().parent.parent
 os.chdir(script_dir)
 
 # Global variables
-
 screen_width = 1500  
 screen_height = 800 
 
 side_menu_width = 280
 
-tile_size = 10
+tile_size = 5
 map_width = screen_width - 300
 map_height = screen_height - 100
 
@@ -37,7 +36,6 @@ map_arr = [[0] * (map_width // tile_size) for _ in range(map_height // tile_size
 
 # Edit tiles types in the map
 def edit_tile(x, y):
-
     x_origin, y_origin = map_menu.rect.topleft
 
     x_offset = map_menu.image.get_width()
@@ -57,10 +55,13 @@ def edit_tile(x, y):
             map_arr[y_map_arr][x_map_arr] = 0
 
 # Generate a map with perlin noise
-def generate_perlin_map(map_arr, min_out, max_out, min_seed=0, max_seed=100, scale=0.1, octaves=1, persistence=0.5, lacunarity=2.0):
+def generate_perlin_map(map_arr, min_seed=0, max_seed=100, scale=0.02, octaves=4, persistence=0.75, lacunarity=2.0):
     print('generate perlin')
     min_in = -1
     max_in = 1
+
+    min_out = 0 
+    max_out = 1
 
     width = map_width // tile_size
     height = map_height // tile_size
@@ -70,18 +71,29 @@ def generate_perlin_map(map_arr, min_out, max_out, min_seed=0, max_seed=100, sca
     for y in range(height):
         for x in range(width):
             noise_value = pnoise2(
-                x * scale,
-                y * scale,
-                octaves=octaves,
-                persistence=persistence,
-                lacunarity=lacunarity,
+                x * scale,                    #How much zoom on details of the y axis.
+                y * scale,                    #How much zoom on details of the x axis.                 
+                octaves=octaves,              #Number of noise layers stacked together.
+                persistence=persistence,      #How much amplitude each successive octave keeps.
+                lacunarity=lacunarity,        #How much frequency increases per octave.
                 repeatx=width,
                 repeaty=height,
                 base=seed
             )
             noise_value_normalized = (noise_value - min_in) / (max_in - min_in) * (max_out - min_out) + min_out
-            print(int(round(noise_value_normalized, 0)))
-            map_arr[y][x] = (int(round(noise_value_normalized, 0)))
+            # #print(int(round(noise_value_normalized, 0)))
+            # map_arr[y][x] = (int(round(noise_value_normalized, 0)))
+
+            if noise_value_normalized < 0.5:
+                map_arr[y][x] = water  # water (70%)
+            elif noise_value_normalized < 0.56:
+                map_arr[y][x] = land  # land (15%)
+            elif noise_value_normalized < 0.6:
+                map_arr[y][x] = hills  # hills (10%)
+            elif noise_value_normalized < 0.65:
+                map_arr[y][x] = mounts  # mountains (4%)
+            else:
+                map_arr[y][x] = peaks  # peaks (1%)
 
     print(seed)
     print('done generating')
@@ -122,6 +134,9 @@ def render_map():
                     pygame.draw.rect(map_menu.image, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)
                 case 3:
                     pygame.draw.rect(map_menu.image, "black", pygame.Rect(x, y, tile_size, tile_size))
+                    pygame.draw.rect(map_menu.image, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)
+                case 4:
+                    pygame.draw.rect(map_menu.image, "white", pygame.Rect(x, y, tile_size, tile_size))
                     pygame.draw.rect(map_menu.image, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)
                 case _:
                     pass
@@ -212,7 +227,7 @@ while running:
             #Checks if generate button is clicked
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if new_map_button.rect.collidepoint(event.pos):
-                    generate_perlin_map(map_arr, water, mounts, 0, 100)
+                    generate_perlin_map(map_arr, 0, 100)
 
             #Checks if reset button is clicked        
             if event.type == pygame.MOUSEBUTTONDOWN:
