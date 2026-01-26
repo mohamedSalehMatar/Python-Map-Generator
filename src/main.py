@@ -99,8 +99,11 @@ def generate_perlin_map(map_arr,
     sample.sort()
 
     # Transform given thresholds to match the bell curve distribution of pnoise2 function
-    for percentile in [water_ratio, land_ratio, hills_ratio, mounts_ratio, peaks_ratio]:
-        index = int(len(sample) * percentile / 100)
+    percentiles = [water_ratio, water_ratio + land_ratio, water_ratio + land_ratio + hills_ratio, 
+                   water_ratio + land_ratio + hills_ratio + mounts_ratio,
+                   water_ratio + land_ratio + hills_ratio + mounts_ratio + peaks_ratio]
+    for percentile in percentiles:
+        index = min(int(len(sample) * percentile), len(sample) - 1)
         thresholds.append(sample[index])
 
     print(thresholds) 
@@ -113,17 +116,17 @@ def generate_perlin_map(map_arr,
 
     for y in range(rows):
         row = []
-        for x in range(cols):           
-            if noise_arr[y][x] < thresholds[4]:
-                value = peaks
-            elif noise_arr[y][x] < thresholds[3]:
-                value = mounts
-            elif noise_arr[y][x] < thresholds[2]:
-                value = hills 
+        for x in range(cols):
+            if noise_arr[y][x] < thresholds[0]:
+                value = water
             elif noise_arr[y][x] < thresholds[1]:
                 value = land  
-            elif noise_arr[y][x] < thresholds[0]:
-                value = water
+            elif noise_arr[y][x] < thresholds[2]:
+                value = hills 
+            elif noise_arr[y][x] < thresholds[3]:
+                value = mounts
+            else:
+                value = peaks
             
             row.append(value)
         map_arr.append(row)
