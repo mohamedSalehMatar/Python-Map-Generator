@@ -55,7 +55,10 @@ def edit_tile(x, y):
             map_arr[y_map_arr][x_map_arr] = 0
 
 # Generate a map with perlin noise
-def generate_perlin_map(map_arr, min_seed=0, max_seed=100, scale=0.02, octaves=4, persistence=0.75, lacunarity=2.0):
+def generate_perlin_map(map_arr,
+                        water_ratio=0.7, land_ratio=0.15, hills_ratio=0.1, mounts_ratio=0.07, peaks_ratio=0.03,
+                        min_seed=0, max_seed=100,
+                        scale=0.02, octaves=4, persistence=0.75, lacunarity=2.0):
     print('generate perlin')
     min_in = -1
     max_in = 1
@@ -65,6 +68,15 @@ def generate_perlin_map(map_arr, min_seed=0, max_seed=100, scale=0.02, octaves=4
 
     width = map_width // tile_size
     height = map_height // tile_size
+
+    # Sample init
+    sample = []
+
+    # Threshold init
+    thresholds = []
+
+    # Noise Values init
+    noise_arr = [[0] * (width) for _ in range(height)]
 
     seed = random.randrange(min_seed, max_seed)
 
@@ -81,19 +93,41 @@ def generate_perlin_map(map_arr, min_seed=0, max_seed=100, scale=0.02, octaves=4
                 base=seed
             )
             noise_value_normalized = (noise_value - min_in) / (max_in - min_in) * (max_out - min_out) + min_out
-            # #print(int(round(noise_value_normalized, 0)))
-            # map_arr[y][x] = (int(round(noise_value_normalized, 0)))
+            noise_arr[y][x] = noise_value_normalized
+            sample.append(noise_value_normalized)
 
-            if noise_value_normalized < 0.5:
-                map_arr[y][x] = water  # water (70%)
-            elif noise_value_normalized < 0.56:
-                map_arr[y][x] = land  # land (15%)
-            elif noise_value_normalized < 0.6:
-                map_arr[y][x] = hills  # hills (10%)
-            elif noise_value_normalized < 0.65:
-                map_arr[y][x] = mounts  # mountains (4%)
-            else:
-                map_arr[y][x] = peaks  # peaks (1%)
+    sample.sort()
+
+    # Transform given thresholds to match the bell curve distribution of pnoise2 function
+    for percentile in [water_ratio, land_ratio, hills_ratio, mounts_ratio, peaks_ratio]:
+        index = int(len(sample) * percentile / 100)
+        thresholds.append(sample[index])
+
+    print(thresholds) 
+
+    # Map re init
+    rows, cols = map_height // tile_size, map_width // tile_size
+    print(rows, cols)
+    map_arr.clear()
+    value = 0
+
+    for y in range(rows):
+        row = []
+        for x in range(cols):           
+            if noise_arr[y][x] < thresholds[4]:
+                value = peaks
+            elif noise_arr[y][x] < thresholds[3]:
+                value = mounts
+            elif noise_arr[y][x] < thresholds[2]:
+                value = hills 
+            elif noise_arr[y][x] < thresholds[1]:
+                value = land  
+            elif noise_arr[y][x] < thresholds[0]:
+                value = water
+            
+            row.append(value)
+        map_arr.append(row)
+
 
     print(seed)
     print('done generating')
@@ -227,7 +261,7 @@ while running:
             #Checks if generate button is clicked
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if new_map_button.rect.collidepoint(event.pos):
-                    generate_perlin_map(map_arr, 0, 100)
+                    generate_perlin_map(map_arr)
 
             #Checks if reset button is clicked        
             if event.type == pygame.MOUSEBUTTONDOWN:
