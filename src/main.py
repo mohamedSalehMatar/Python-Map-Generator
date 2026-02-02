@@ -53,12 +53,13 @@ def edit_tile(x, y):
             map_arr[y_map_arr][x_map_arr] = 1
         else:
             map_arr[y_map_arr][x_map_arr] = 0
-
+            
 # Generate a map with perlin noise
 def generate_perlin_map(map_arr,
                         water_ratio=0.6, land_ratio=0.3, hills_ratio=0.07, mounts_ratio=0.029, peaks_ratio=0.001,
                         min_seed=0, max_seed=100,
                         scale=0.02, octaves=4, persistence=0.75, lacunarity=2.0):
+    
     print('generate perlin')
     min_in = -1
     max_in = 1
@@ -220,21 +221,25 @@ running = True
 map_menu = Menu((screen_width//2, screen_height//2), 1, '', map_width, map_height, 'center', 255, 0, 0)
 
 # Intializing Menus
-side_menu = Menu((0,0), 1, "assets/sprites/menus/side_menu.png", side_menu_width, 700, 0, 0, 0)
+main_menu = Menu((0,0), 1, '', side_menu_width, 700, r=255, g=255, b=255)
+new_map_menu = Menu((0,0), 1, '', side_menu_width, 700, r=255, g=255, b=255)
 
-# Intializing Buttons
+# Intializing Buttons (main menu)
 new_map_button = Button("assets/sprites/buttons/new_map_button.png", (side_menu_width//2, 150))
 reset_map_button = Button("assets/sprites/buttons/reset_map_button.png", (side_menu_width//2, 250))
 save_button = Button("assets/sprites/buttons/save_button.png", (side_menu_width//2, 350))
 load_button = Button("assets/sprites/buttons/load_button.png", (side_menu_width//2, 450))
 exit_button = Button("assets/sprites/buttons/exit_button.png", (side_menu_width//2, 550))
 
+# Intializing Buttons (main menu)
+back_button = Button("assets/sprites/buttons/back_button.png", (side_menu_width//2, 550))
+
 map_sprite_group = pygame.sprite.Group(
     map_menu
 ) 
 
-menus_sprite_group = pygame.sprite.Group(
-    side_menu,
+main_menu_sprite_group = pygame.sprite.Group(
+    main_menu,
     new_map_button,
     reset_map_button,
     save_button,
@@ -242,26 +247,33 @@ menus_sprite_group = pygame.sprite.Group(
     exit_button
 )
 
+new_map_menu_sprite_group = pygame.sprite.Group(
+    new_map_menu,
+    back_button
+)
+
+
+
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
 
-        #Checks if a user is clicking on the map
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            mouse_x, mouse_y = event.pos
-            if 0 < mouse_x < screen_width  and 0 < mouse_y < screen_height:
-                edit_tile(mouse_x, mouse_y)
+        # #Checks if a user is clicking on the map
+        # if event.type == pygame.MOUSEBUTTONDOWN:
+        #     mouse_x, mouse_y = event.pos
+        #     if 0 < mouse_x < screen_width  and 0 < mouse_y < screen_height:
+        #         edit_tile(mouse_x, mouse_y)
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_m:
-                if not side_menu.is_on:
-                    side_menu.toggle()
+                if not main_menu.is_on:
+                    main_menu.toggle()
 
-                elif side_menu.is_on:
-                    side_menu.toggle()
+                elif main_menu.is_on:
+                    main_menu.toggle()
 
-        if side_menu.is_on:
+        if main_menu.is_on:
             #Checks if generate button is clicked
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if new_map_button.rect.collidepoint(event.pos):
@@ -294,8 +306,8 @@ while running:
     map_sprite_group.draw(screen)
     render_map()
     
-    if side_menu.is_on:
-        menus_sprite_group.draw(screen)
+    if main_menu.is_on:
+        main_menu_sprite_group.draw(screen)
 
     pygame.display.flip()
 
