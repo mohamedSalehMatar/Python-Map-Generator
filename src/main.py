@@ -56,7 +56,7 @@ def edit_tile(x, y):
 
 # Generate a map with perlin noise
 def generate_perlin_map(map_arr,
-                        water_ratio=0.7, land_ratio=0.15, hills_ratio=0.1, mounts_ratio=0.07, peaks_ratio=0.03,
+                        water_ratio=0.6, land_ratio=0.3, hills_ratio=0.07, mounts_ratio=0.029, peaks_ratio=0.001,
                         min_seed=0, max_seed=100,
                         scale=0.02, octaves=4, persistence=0.75, lacunarity=2.0):
     print('generate perlin')
@@ -102,6 +102,7 @@ def generate_perlin_map(map_arr,
     percentiles = [water_ratio, water_ratio + land_ratio, water_ratio + land_ratio + hills_ratio, 
                    water_ratio + land_ratio + hills_ratio + mounts_ratio,
                    water_ratio + land_ratio + hills_ratio + mounts_ratio + peaks_ratio]
+                   
     for percentile in percentiles:
         index = min(int(len(sample) * percentile), len(sample) - 1)
         thresholds.append(sample[index])
