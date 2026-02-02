@@ -6,9 +6,7 @@ class Menu(pygame.sprite.Sprite):
         if image_path:
             self.image = pygame.transform.scale(pygame.image.load(image_path).convert_alpha(), (width, height))
         else:
-            print('hi')
             self.image = pygame.Surface((width, height), pygame.SRCALPHA)
-            print(r, g, b)
             self.image.fill((r, g, b))
 
         if mode == 'center':

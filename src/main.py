@@ -222,7 +222,7 @@ map_menu = Menu((screen_width//2, screen_height//2), 1, '', map_width, map_heigh
 
 # Intializing Menus
 main_menu = Menu((0,0), 1, '', side_menu_width, 700, r=255, g=255, b=255)
-new_map_menu = Menu((0,0), 1, '', side_menu_width, 700, r=255, g=255, b=255)
+new_map_menu = Menu((0,0), 0, '', side_menu_width, 700, r=255, g=255, b=255)
 
 # Intializing Buttons (main menu)
 new_map_button = Button("assets/sprites/buttons/new_map_button.png", (side_menu_width//2, 150))
@@ -232,6 +232,7 @@ load_button = Button("assets/sprites/buttons/load_button.png", (side_menu_width/
 exit_button = Button("assets/sprites/buttons/exit_button.png", (side_menu_width//2, 550))
 
 # Intializing Buttons (main menu)
+generate_button = Button("assets/sprites/buttons/new_map_button.png", (side_menu_width//2, 450))
 back_button = Button("assets/sprites/buttons/back_button.png", (side_menu_width//2, 550))
 
 map_sprite_group = pygame.sprite.Group(
@@ -249,6 +250,7 @@ main_menu_sprite_group = pygame.sprite.Group(
 
 new_map_menu_sprite_group = pygame.sprite.Group(
     new_map_menu,
+    generate_button,
     back_button
 )
 
@@ -277,7 +279,8 @@ while running:
             #Checks if generate button is clicked
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if new_map_button.rect.collidepoint(event.pos):
-                    generate_perlin_map(map_arr)
+                    main_menu.is_on = 0
+                    new_map_menu.is_on = 1
 
             #Checks if reset button is clicked        
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -298,7 +301,17 @@ while running:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if exit_button.rect.collidepoint(event.pos):
                         running = False
-                
+
+        if new_map_menu.is_on:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if back_button.rect.collidepoint(event.pos):
+                    main_menu.is_on = 1
+                    new_map_menu.is_on = 0 
+        
+        if event.type == pygame.MOUSEBUTTONDOWN:
+                if generate_button.rect.collidepoint(event.pos):
+                    generate_perlin_map(map_arr)
+
         if event.type == pygame.QUIT:
             running = False
 
@@ -308,6 +321,9 @@ while running:
     
     if main_menu.is_on:
         main_menu_sprite_group.draw(screen)
+
+    if new_map_menu.is_on:
+        new_map_menu_sprite_group.draw(screen)
 
     pygame.display.flip()
 
