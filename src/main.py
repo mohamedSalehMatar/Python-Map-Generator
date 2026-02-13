@@ -308,9 +308,9 @@ while running:
                     main_menu.is_on = 1
                     new_map_menu.is_on = 0 
         
-        if event.type == pygame.MOUSEBUTTONDOWN:
-                if generate_button.rect.collidepoint(event.pos):
-                    generate_perlin_map(map_arr)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                    if generate_button.rect.collidepoint(event.pos):
+                        generate_perlin_map(map_arr)
 
         if event.type == pygame.QUIT:
             running = False
