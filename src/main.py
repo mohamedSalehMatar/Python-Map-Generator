@@ -36,10 +36,10 @@ map_arr = [[0] * (map_width // tile_size) for _ in range(map_height // tile_size
 
 # Edit tiles types in the map
 def edit_tile(x, y):
-    x_origin, y_origin = map_menu.rect.topleft
+    x_origin, y_origin = map.rect.topleft
 
-    x_offset = map_menu.image.get_width()
-    y_offset = map_menu.image.get_height()
+    x_offset = map.image.get_width()
+    y_offset = map.image.get_height()
 
     if x_origin <= x <= x_origin + x_offset and y_origin <= y <= y_origin + y_offset:
         x = x - x_origin
@@ -163,20 +163,20 @@ def render_map():
         for y in range(0, map_height, tile_size):
             match map_arr[y//tile_size][x//tile_size]:
                 case 0:
-                    pygame.draw.rect(map_menu.image, "blue", pygame.Rect(x, y, tile_size, tile_size))
-                    pygame.draw.rect(map_menu.image, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)
+                    pygame.draw.rect(map.image, "blue", pygame.Rect(x, y, tile_size, tile_size))
+                    pygame.draw.rect(map.image, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)
                 case 1:
-                    pygame.draw.rect(map_menu.image, "green", pygame.Rect(x, y, tile_size, tile_size))
-                    pygame.draw.rect(map_menu.image, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)
+                    pygame.draw.rect(map.image, "green", pygame.Rect(x, y, tile_size, tile_size))
+                    pygame.draw.rect(map.image, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)
                 case 2:
-                    pygame.draw.rect(map_menu.image, "brown", pygame.Rect(x, y, tile_size, tile_size))
-                    pygame.draw.rect(map_menu.image, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)
+                    pygame.draw.rect(map.image, "brown", pygame.Rect(x, y, tile_size, tile_size))
+                    pygame.draw.rect(map.image, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)
                 case 3:
-                    pygame.draw.rect(map_menu.image, "black", pygame.Rect(x, y, tile_size, tile_size))
-                    pygame.draw.rect(map_menu.image, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)
+                    pygame.draw.rect(map.image, "black", pygame.Rect(x, y, tile_size, tile_size))
+                    pygame.draw.rect(map.image, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)
                 case 4:
-                    pygame.draw.rect(map_menu.image, "white", pygame.Rect(x, y, tile_size, tile_size))
-                    pygame.draw.rect(map_menu.image, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)
+                    pygame.draw.rect(map.image, "white", pygame.Rect(x, y, tile_size, tile_size))
+                    pygame.draw.rect(map.image, "black", pygame.Rect(x, y, tile_size, tile_size), width=1)
                 case _:
                     pass
     
@@ -218,7 +218,7 @@ clock = pygame.time.Clock()
 running = True
 
 # Intializing Map
-map_menu = Menu((screen_width//2, screen_height//2), 1, '', map_width, map_height, 'center', 255, 0, 0)
+map = Menu((screen_width//2, screen_height//2), 1, '', map_width, map_height, 'center', 255, 0, 0)
 
 # Intializing Menus
 main_menu = Menu((0,0), 1, '', side_menu_width, 700, r=255, g=255, b=255)
@@ -236,7 +236,7 @@ generate_button = Button("assets/sprites/buttons/new_map_button.png", (side_menu
 back_button = Button("assets/sprites/buttons/back_button.png", (side_menu_width//2, 550))
 
 map_sprite_group = pygame.sprite.Group(
-    map_menu
+    map
 ) 
 
 main_menu_sprite_group = pygame.sprite.Group(
