@@ -16,3 +16,12 @@ class MapGen(pygame.sprite.Sprite):
         
         self.is_on = is_on
     
+# To-Do:
+#     1- Every rect is a node in an undirected graph
+#     2- Every "Split" produce 2 (or more) rects
+#     3- Product rects are therfore new nodes in the graph
+#     5- Every node in the graph is a province (tile)
+#     6- Sub graphs are contients and/or strategic zones
+#     7- Deadline: 6 pm
+
+    
