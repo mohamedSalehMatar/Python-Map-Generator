@@ -1,6 +1,6 @@
 import pygame
 
-class Menu(pygame.sprite.Sprite):
+class MapGen(pygame.sprite.Sprite):
     def __init__(self, pos, is_on, image_path='', width=50, height=50, mode='topleft', r=0, g=0, b=0):
         super().__init__()
         if image_path:
@@ -15,12 +15,4 @@ class Menu(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(topleft=pos)
         
         self.is_on = is_on
-
-    def toggle(self):
-        if self.is_on == 0:
-            self.is_on = 1
-        else:
-            self.is_on = 0 
-        
-        return self.is_on
     

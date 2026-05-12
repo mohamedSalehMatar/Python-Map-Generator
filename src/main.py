@@ -10,6 +10,7 @@ from pathlib import Path
 
 from buttons import Button
 from menus import Menu
+from map_gen import MapGen
 
 script_dir = Path(sys.argv[0]).resolve().parent.parent
 os.chdir(script_dir)
@@ -220,6 +221,9 @@ running = True
 # Intializing Map
 map = Menu((screen_width//2, screen_height//2), 1, '', map_width, map_height, 'center', 255, 0, 0)
 
+# Intializing Tectonic Map
+tectonic_map = Menu((screen_width//2, screen_height//2), 1, '', map_width, map_height, 'center', 0, 255, 0)
+
 # Intializing Menus
 main_menu = Menu((0,0), 1, '', side_menu_width, 700, r=255, g=255, b=255)
 new_map_menu = Menu((0,0), 0, '', side_menu_width, 700, r=255, g=255, b=255)
@@ -236,7 +240,8 @@ generate_button = Button("assets/sprites/buttons/new_map_button.png", (side_menu
 back_button = Button("assets/sprites/buttons/back_button.png", (side_menu_width//2, 550))
 
 map_sprite_group = pygame.sprite.Group(
-    map
+    # map
+    tectonic_map
 ) 
 
 main_menu_sprite_group = pygame.sprite.Group(
